@@ -1,0 +1,36 @@
+name: Build and Deploy to Docker Hub & Kubernetes
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  IMAGE_NAME: angular-demo-app
+  DOCKER_REPO: ${{ secrets.DOCKER_USERNAME }}/angular-demo-app
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker Image
+        run: |
+          docker build -t $DOCKER_REPO:latest .
+          docker push $DOCKER_REPO:latest
+
+      - name: Set up kubectl (assumes self-managed cluster)
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
