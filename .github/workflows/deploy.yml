@@ -2,7 +2,7 @@ name: Build and Deploy to Docker Hub & Kubernetes
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 env:
   IMAGE_NAME: angular-demo-app
