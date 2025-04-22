@@ -24,7 +24,7 @@ jobs:
           docker build -t $DOCKER_REPO:latest .
           docker push $DOCKER_REPO:latest
 
-      - name: Set up kubectl (assumes self-managed cluster)
+      - name: Set up kubectl (self-managed cluster)
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
