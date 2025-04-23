@@ -46,6 +46,10 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
 
+      - name: Clean up existing Ingress (if any)
+        run: |
+          kubectl delete ingress angular-ingress --ignore-not-found=true
+          
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/deployment.yaml
