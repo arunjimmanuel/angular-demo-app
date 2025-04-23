@@ -30,7 +30,7 @@ jobs:
         run: |
           echo "Waiting for Kubernetes API..."
           for i in {1..30}; do
-            if kubectl version --short; then
+            if kubectl get nodes > /dev/null 2>&1; then
               echo "Kubernetes is ready."
               break
             fi
