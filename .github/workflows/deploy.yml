@@ -26,6 +26,20 @@ jobs:
           docker build -t $DOCKER_REPO:latest .
           docker push $DOCKER_REPO:latest
 
+      - name: Wait for Kubernetes to be ready
+        run: |
+          echo "Waiting for Kubernetes API..."
+          for i in {1..30}; do
+            if kubectl version --short; then
+              echo "Kubernetes is ready."
+              break
+            fi
+            echo "Waiting ($i)..."
+            sleep 5
+          done
+        env:
+          KUBECONFIG: /home/ubuntu/.kube/config
+
       - name: Set up kubectl (self-managed cluster)
         run: |
           mkdir -p ~/.kube
