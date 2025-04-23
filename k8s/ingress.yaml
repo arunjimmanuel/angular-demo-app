@@ -6,7 +6,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: 18.211.214.106
+  - host: ec2-18-211-214-106.compute-1.amazonaws.com
     http:
       paths:
         - path: /
