@@ -49,6 +49,15 @@ jobs:
       - name: Clean up existing Ingress (if any)
         run: |
           kubectl delete ingress angular-ingress --ignore-not-found=true
+
+      - name: Wait for Ingress Webhook
+        run: |
+          echo "Waiting for ingress-nginx admission webhook to be ready..."
+          until kubectl get endpoints -n ingress-nginx ingress-nginx-controller-admission -o jsonpath="{.subsets[*].addresses[*].ip}" | grep -q '[0-9]'; do
+            echo "Still waiting..."
+            sleep 5
+          done
+        
           
       - name: Deploy to Kubernetes
         run: |
