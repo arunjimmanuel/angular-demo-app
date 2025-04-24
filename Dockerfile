@@ -10,7 +10,7 @@ RUN npm run build --prod
 
 FROM nginx:alpine
 
-COPY --from=build /app/dist/job-tracker /usr/share/nginx/html
+COPY --from=build /app/dist/job-tracker/browser /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
