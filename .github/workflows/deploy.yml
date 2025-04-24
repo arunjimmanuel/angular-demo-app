@@ -65,7 +65,6 @@ jobs:
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
           kubectl apply -f k8s/ingress.yaml --validate=false
-          kubectl apply -f k8s/nginx-nodeport-service.yaml 
 
       - name: Clean up unused Docker images
         run: docker image prune -f
