@@ -17,10 +17,3 @@ spec:
               name: angular-demo-service
               port:
                 number: 80
-        - path: /api
-          pathType: Prefix
-          backend:
-            service:
-              name: spring-service
-              port:
-                number: 8080
