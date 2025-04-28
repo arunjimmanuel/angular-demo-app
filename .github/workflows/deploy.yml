@@ -58,18 +58,22 @@ jobs:
               --timeout=120s
           else
             echo "Ingress NGINX already installed."
-          fi     
+          fi
+
+          echo "Waiting for ingress-nginx controller to be ready..."
+          kubectl rollout status deployment ingress-nginx-controller -n ingress-nginx
+
+          echo "Waiting for admission jobs to complete..."
+          kubectl wait --namespace ingress-nginx --for=condition=complete job/ingress-nginx-admission-create --timeout=60s
+          kubectl wait --namespace ingress-nginx --for=condition=complete job/ingress-nginx-admission-patch --timeout=60s
           
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
 
-          # Wait until ingress-nginx controller is fully ready
-          kubectl rollout status deployment ingress-nginx-controller -n ingress-nginx
-
           kubectl delete ingress angular-ingress --ignore-not-found=true
-          kubectl apply -f k8s/ingress.yaml --validate=false
+          kubectl apply -f k8s/ingress.yaml
 
       - name: Clean up unused Docker images
         run: docker image prune -f
