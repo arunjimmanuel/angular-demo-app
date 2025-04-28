@@ -62,9 +62,13 @@ jobs:
           
       - name: Deploy to Kubernetes
         run: |
-          kubectl delete ingress angular-ingress --ignore-not-found=true  
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
+
+          # Wait until ingress-nginx controller is fully ready
+          kubectl rollout status deployment ingress-nginx-controller -n ingress-nginx
+
+          kubectl delete ingress angular-ingress --ignore-not-found=true
           kubectl apply -f k8s/ingress.yaml --validate=false
 
       - name: Clean up unused Docker images
