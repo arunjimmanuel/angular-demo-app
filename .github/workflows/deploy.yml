@@ -66,6 +66,8 @@ jobs:
           echo "Waiting for admission jobs to complete..."
           kubectl wait --namespace ingress-nginx --for=condition=complete job/ingress-nginx-admission-create --timeout=60s
           kubectl wait --namespace ingress-nginx --for=condition=complete job/ingress-nginx-admission-patch --timeout=60s
+        env:
+          KUBECONFIG: /home/ubuntu/.kube/config
           
       - name: Deploy to Kubernetes
         run: |
@@ -74,6 +76,8 @@ jobs:
 
           kubectl delete ingress angular-ingress --ignore-not-found=true
           kubectl apply -f k8s/ingress.yaml
+        env:
+          KUBECONFIG: /home/ubuntu/.kube/config
 
       - name: Clean up unused Docker images
         run: docker image prune -f
