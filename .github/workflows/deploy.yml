@@ -48,22 +48,11 @@ jobs:
         run: |
           if ! kubectl get ns ingress-nginx > /dev/null 2>&1; then
             echo "Ingress NGINX not found. Installing..."
-            kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.0/deploy/static/provider/cloud/deploy.yaml
+            helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+            helm repo update
+            helm install ingress-nginx ingress-nginx/ingress-nginx --set controller.admissionWebhooks.enabled=false
           else
             echo "Ingress NGINX already installed."
-          fi
-
-          echo "Waiting for ingress-nginx controller to be ready..."
-          kubectl rollout status deployment ingress-nginx-controller -n ingress-nginx --timeout=120s
-
-          echo "Waiting for admission jobs to complete..."
-          kubectl wait --namespace ingress-nginx --for=condition=complete job/ingress-nginx-admission-create --timeout=60s || true
-          kubectl wait --namespace ingress-nginx --for=condition=complete job/ingress-nginx-admission-patch --timeout=60s || true
-
-          # Ensure NodePort service for ingress-nginx-controller exists
-          if ! kubectl get svc ingress-nginx-controller -n ingress-nginx > /dev/null 2>&1; then
-            echo "Creating ingress-nginx-controller service (NodePort)..."
-            kubectl expose deployment ingress-nginx-controller --port=80 --target-port=80 --name=ingress-nginx-controller --type=NodePort -n ingress-nginx
           fi
 
       - name: Deploy to Kubernetes
