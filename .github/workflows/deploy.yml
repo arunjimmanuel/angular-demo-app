@@ -29,7 +29,7 @@ jobs:
       - name: Set up kubectl (self-managed cluster)
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+          echo "${{ secrets.KUBECONFIG_B64 }}" | base64 -d > ~/.kube/config
           chmod 600 ~/.kube/config
 
       - name: Wait for Kubernetes to be ready
