@@ -5,7 +5,6 @@ on:
     branches: [ master ]
 
 env:
-  IMAGE_NAME: angular-demo-app
   DOCKER_REPO: ${{ secrets.DOCKER_USERNAME }}/angular-demo-app
 
 jobs:
