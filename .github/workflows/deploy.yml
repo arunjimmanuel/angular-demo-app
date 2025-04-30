@@ -53,7 +53,9 @@ jobs:
 
           echo "Installing or upgrading ingress-nginx via Helm..."
           helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
-            --set controller.admissionWebhooks.enabled=false
+          --namespace ingress-nginx \
+          --create-namespace \
+          --set controller.admissionWebhooks.enabled=false
 
           echo "Waiting for ingress-nginx-controller deployment to be ready..."
           kubectl rollout status deployment ingress-nginx-controller -n ingress-nginx --timeout=90s
