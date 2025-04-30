@@ -9,7 +9,7 @@ env:
 
 jobs:
   build-deploy:
-    runs-on: self-hosted
+    runs-on: [self-hosted, angular-runner]
     env:
       KUBECONFIG: /home/ubuntu/.kube/config
 
@@ -56,6 +56,8 @@ jobs:
           --namespace ingress-nginx \
           --create-namespace \
           --set controller.service.type=NodePort \
+          --set controller.service.nodePorts.http=80 \
+          --set controller.service.nodePorts.https=443 \
           --set controller.admissionWebhooks.enabled=false
 
           echo "Waiting for ingress-nginx-controller deployment to be ready..."
