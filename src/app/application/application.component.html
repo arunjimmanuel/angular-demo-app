@@ -1,0 +1,41 @@
+<div class="container mt-5">
+    <h2 class="mb-4">Job Application Tracker</h2>
+
+    <form (ngSubmit)="addApplication()" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <input type="text" [(ngModel)]="newApplication.company" name="company" placeholder="Company"
+                    class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <input type="text" [(ngModel)]="newApplication.jobTitle" name="role" placeholder="Role"
+                    class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <input type="date" [(ngModel)]="newApplication.appliedDate" name="appliedDate" class="form-control"
+                    required>
+            </div>
+            <div class="col-12 text-end">
+                <button type="submit" class="btn btn-primary">Add Application</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-md-4" *ngFor="let status of statuses">
+            <h5 class="text-capitalize">{{ status }}</h5>
+            <div class="p-2 border rounded min-vh-50" (drop)="onDrop($event, status)" (dragover)="onDragOver($event)">
+                <div *ngFor="let app of getApplicationsByStatus(status)" class="card mb-2 p-2" draggable="true"
+                    (dragstart)="onDragStart($event, app)">
+                    <div><strong>{{ app.company }}</strong></div>
+                    <div>{{ app.jobTitle }}</div>
+                    <div><small>{{ app.appliedDate }}</small></div>
+                    <div class="text-end">
+                        <button class="btn btn-sm btn-outline-danger" (click)="deleteApplication(app)"><i
+                                class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

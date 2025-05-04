@@ -1,0 +1,98 @@
+<div class="container">
+    <div class="card">
+        <h2>{{ isLogin ? 'Login' : 'Register' }}</h2>
+
+        <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                    <label for="email" class="form-label mb-0">Email</label>
+                </div>
+
+                <div class="input-group">
+                    <input formControlName="email" type="email" required id="email"
+                        class="form-control form-control-lg form-control-solid" [ngClass]="{
+                            'is-invalid': authForm.get('email')?.invalid && authForm.get('email')?.touched
+                          }">
+                </div>
+                <div *ngIf="authForm.get('email')?.invalid && authForm.get('email')?.touched"
+                    class="text-danger small mt-1">
+                    <div *ngIf="authForm.get('email')?.errors?.['required']">Email is required.</div>
+                    <div *ngIf="authForm.get('email')?.errors?.['pattern']">Please enter a valid email address.</div>
+                </div>
+
+            </div>
+            <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                    <label for="password" class="form-label mb-0">Password</label>
+                    <span *ngIf="!isLogin" class="ms-2" data-bs-toggle="tooltip"
+                        title="Use 8+ characters with letters, numbers & symbols." style="cursor: pointer;">
+                        <i class="bi bi-info-circle text-primary"></i>
+                    </span>
+                </div>
+                <div class="input-group">
+                    <input [type]="passwordVisibility.password  ? 'text' : 'password'" formControlName="password"
+                        id="password" class="form-control form-control-lg form-control-solid" autocomplete="off"
+                        (input)="checkPasswordStrength()" [ngClass]="{
+                            'is-invalid': authForm.get('password')?.invalid && authForm.get('password')?.touched
+                          }" />
+                    <span *ngIf="!isLogin"
+                        class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
+                        (click)="togglePasswordVisibility('password')">
+                        <i *ngIf="!passwordVisibility.password" class="bi bi-eye-slash fs-2"></i>
+                        <i *ngIf="passwordVisibility.password" class="bi bi-eye fs-2"></i>
+                    </span>
+                </div>
+
+
+                <!-- Strength Meter -->
+                <div class="d-flex align-items-center mb-3 mt-2" *ngIf="!isLogin">
+                    <div *ngFor="let bar of [0,1,2,3]; let i = index" class="flex-grow-1 rounded h-5px me-2" [ngClass]="{
+                      'bg-secondary': i >= passwordStrength,
+                      'bg-success': i < passwordStrength
+                    }" style="height: 5px;">
+                    </div>
+                </div>
+
+            </div>
+
+            <div *ngIf="authForm.get('password')?.invalid && authForm.get('password')?.touched"
+                class="text-danger small mt-1">
+                <div *ngIf="authForm.get('password')?.errors?.['required']">Password is required.</div>
+                <div *ngIf="authForm.get('password')?.errors?.['pattern']"> Password must be at least 8 characters long
+                    and include uppercase, lowercase, number, and special
+                    character.</div>
+            </div>
+
+            <ng-container *ngIf="!isLogin">
+                <div class="mb-3">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <label for="confirmPassword" class="form-label mb-0">Confirm Password</label>
+                    </div>
+
+                    <div class="input-group">
+                        <input [type]="passwordVisibility.confirmPassword ? 'text' : 'password'" id="confirmPassword"
+                            formControlName="confirmPassword" class="form-control form-control-lg form-control-solid"
+                            autocomplete="off" />
+
+                        <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
+                            (click)="togglePasswordVisibility('confirmPassword')">
+                            <i *ngIf="!passwordVisibility.confirmPassword" class="bi bi-eye-slash fs-2"></i>
+                            <i *ngIf="passwordVisibility.confirmPassword" class="bi bi-eye fs-2"></i>
+                        </span>
+                    </div>
+                    <div *ngIf="authForm.hasError('passwordMismatch') && !isLogin" class="text-danger small mt-1">
+                        Passwords do not match.
+                    </div>
+                </div>
+            </ng-container>
+
+            <button type="submit" [disabled]="authForm.invalid">
+                {{ isLogin ? 'Login' : 'Register' }}
+            </button>
+        </form>
+
+        <p (click)="toggleMode()" class="toggle-link">
+            {{ isLogin ? "Don't have an account? Register" : "Already have an account? Login" }}
+        </p>
+    </div>
+</div>
