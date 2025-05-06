@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="card">
+    <div class="card" *ngIf="!registrationSuccess">
         <h2>{{ isLogin ? 'Login' : 'Register' }}</h2>
 
         <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
@@ -89,10 +89,22 @@
             <button type="submit" [disabled]="authForm.invalid">
                 {{ isLogin ? 'Login' : 'Register' }}
             </button>
+            <div class="mt-3" *ngIf="errorMessage">
+                <div class="alert alert-danger" role="alert">
+                    {{ errorMessage }}
+                </div>
+            </div>
         </form>
 
         <p (click)="toggleMode()" class="toggle-link">
             {{ isLogin ? "Don't have an account? Register" : "Already have an account? Login" }}
         </p>
+    </div>
+
+    <div *ngIf="registrationSuccess" class="alert alert-success p-4 rounded shadow-sm">
+        <h4 class="alert-heading">Registration Successful 🎉</h4>
+        <p>Your account has been created successfully.</p>
+        <p>Click the button below to return to the login page.</p>
+        <button class="btn btn-primary mt-2" (click)="switchToLogin()">Go to Login</button>
     </div>
 </div>
